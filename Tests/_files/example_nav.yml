@@ -1,0 +1,10 @@
+root:
+    route: baz
+    pages:
+        page1:
+            label: Page1
+            uri: http://www.whitewashing.de
+        page2:
+            label: Page2
+            route: foo
+            params: { bar: baz, foo: bar }

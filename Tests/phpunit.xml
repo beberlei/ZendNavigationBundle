@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit bootstrap="TestInit.php">
+   <php>
+    <var name="SYMFONY_PATH" value="/home/benny/code/php/wsnetbeans/symfony/"
+        /> 
+   </php>
+</phpunit>
