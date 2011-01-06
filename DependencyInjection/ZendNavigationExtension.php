@@ -13,6 +13,9 @@ class ZendNavigationExtension extends Extension
 {
     public function navLoad($config, ContainerBuilder $container)
     {
+        $loader = new XmlFileLoader($container, __DIR__.'/../Resources/config');
+        $loader->load('navigation.xml');
+
         $configDir = $container->getParameter('kernel.root_dir').'/config/';
         foreach ($config AS $containerName => $yamlConfigFile) {
             if (!is_string($yamlConfigFile)) {
@@ -24,11 +27,11 @@ class ZendNavigationExtension extends Extension
 
             $def = new Definition("Bundle\ZendNavigationBundle\Navigation");
             $def->setFactoryMethod('factory');
-            $def->addArgument(new Reference('routing'));
+            $def->addArgument(new Reference('router'));
             $def->addArgument(new Reference('request'));
             $def->addArgument($yamlConfigFile);
 
-            $container->addDefinition('zend.navigation.'.%containerName, $def);
+            $container->setDefinition('zend.navigation.'.$containerName, $def);
         } 
     }
 

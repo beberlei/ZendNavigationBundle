@@ -1,0 +1,11 @@
+{% for page in pages %}
+    {% if !loop.last || link_last %}
+        <a href="{{page.href}}"{% if page.class %} class="{{page.class}}"{% endif %}{%if page.id %} id="{{page.id}}"{%endif%}{%if page.title%} title="{{page.title}}"{%endif%}{%if page.target%} target="{{page.target}}"{%endif%}>
+    {% endif %}
+    
+    {{ page.label }}
+
+    {% if !loop.last || link_last %}
+        </a>
+    {% endif %}
+{% endfor; %}

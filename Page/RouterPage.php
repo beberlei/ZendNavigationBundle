@@ -16,11 +16,12 @@ class RouterPage extends AbstractPage implements SymfonyPage
 
     private $router;
 
-    public function isActive()
+    public function isActive($recursive = false)
     {
         if ($this->request->getParameter('_route') == $this->route) {
            return (count(array_intersect_assoc($this->params, $this->request->getParameters()) >= count($this->params)));
         }
+        return false;
     }
 
     public function getHref()
