@@ -139,4 +139,10 @@ class NavigationExtension extends \Twig_Extension
             return array();
         }
     }
+
+    public function accept(AbstractPage $page, $recursive = true)
+    {
+        // ACL, Visiblity and such
+        return true;
+    }
 }

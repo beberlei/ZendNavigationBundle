@@ -3,6 +3,7 @@
 namespace Bundle\ZendNavigationBundle\Page;
 
 use Zend\Navigation\AbstractPage;
+use Zend\Config\Config;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -78,5 +79,26 @@ class RouterPage extends AbstractPage implements SymfonyPage
                 'params' => $this->params,
             )
         );
+    }
+
+    public function addPage($page)
+    {
+        if (is_array($page) || $page instanceof Config) {
+            if (isset($page['route']) && !isset($page['type'])) {
+                $page['type'] = "Bundle\ZendNavigationBundle\Page\RouterPage";
+            }
+            $page['router'] = $this->router;
+            $page['request'] = $this->request;
+            if (isset($page['pages'])) {
+                $page['pages'] = $page['pages']; // resort to back
+            }
+            $page = AbstractPage::factory($page);
+        }
+        parent::addPage($page);
+        if ($page instanceof SymfonyPage) {
+            $page->setRouter($this->router);
+            $page->setRequest($this->request);
+        }
+        return $this;
     }
 }

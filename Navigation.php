@@ -32,6 +32,11 @@ class Navigation extends Container
             if (isset($page['route']) && !isset($page['type'])) {
                 $page['type'] = "Bundle\ZendNavigationBundle\Page\RouterPage";
             }
+            $page['router'] = $this->router;
+            $page['request'] = $this->request;
+            if (isset($page['pages'])) {
+                $page['pages'] = $page['pages']; // resort to back
+            }
             $page = AbstractPage::factory($page);
         }
         parent::addPage($page);
