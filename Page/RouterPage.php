@@ -43,11 +43,23 @@ class RouterPage extends AbstractPage implements SymfonyPage
     public function setRouter(RouterInterface $router)
     {
         $this->router = $router;
+
+        foreach ($this->_pages AS $page) {
+            if ($page instanceof SymfonyPage) {
+                $page->setRouter($router);
+            }
+        }
     }
 
     public function setRequest(Request $request)
     {
         $this->request = $request;
+
+        foreach ($this->_pages AS $page) {
+            if ($page instanceof SymfonyPage) {
+                $page->setRequest($request);
+            }
+        }
     }
 
     public function getRouter()
@@ -87,18 +99,9 @@ class RouterPage extends AbstractPage implements SymfonyPage
             if (isset($page['route']) && !isset($page['type'])) {
                 $page['type'] = "Bundle\ZendNavigationBundle\Page\RouterPage";
             }
-            $page['router'] = $this->router;
-            $page['request'] = $this->request;
-            if (isset($page['pages'])) {
-                $page['pages'] = $page['pages']; // resort to back
-            }
             $page = AbstractPage::factory($page);
         }
         parent::addPage($page);
-        if ($page instanceof SymfonyPage) {
-            $page->setRouter($this->router);
-            $page->setRequest($this->request);
-        }
         return $this;
     }
 }

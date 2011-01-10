@@ -24,7 +24,8 @@ class NavigationTest extends \PHPUnit_Framework_TestCase
         $configFile = __DIR__ . "/_files/example_nav.yml";
 
         $container = \Bundle\ZendNavigationBundle\Navigation::factory($router, $request, $configFile);
+        $page2 = $container->findBy('label', 'Page2');
 
-        $this->assertEquals(1, count($container));
+        $this->assertInstanceOf('Bundle\ZendNavigationBundle\Page\RouterPage', $page2);
     }
 }
