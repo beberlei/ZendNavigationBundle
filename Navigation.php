@@ -31,6 +31,8 @@ class Navigation extends Container
         if (is_array($page) || $page instanceof Config) {
             if (isset($page['route']) && !isset($page['type'])) {
                 $page['type'] = "Bundle\ZendNavigationBundle\Page\RouterPage";
+            } else if (isset($page['uri']) && !isset($page['type'])) {
+                $page['type'] = "Bundle\ZendNavigationBundle\Page\UriPage";
             }
             $page = AbstractPage::factory($page);
         }
