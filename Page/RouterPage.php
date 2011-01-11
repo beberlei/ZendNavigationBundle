@@ -19,8 +19,8 @@ class RouterPage extends AbstractPage implements SymfonyPage
 
     public function isActive($recursive = false)
     {
-        if ($this->request->getParameter('_route') == $this->route) {
-           return (count(array_intersect_assoc($this->params, $this->request->getParameters()) >= count($this->params)));
+        if ($this->request->attributes->get('_route') == $this->route) {
+           return (count(array_intersect_assoc($this->params, $this->request->query->all())) >= count($this->params));
         }
         return false;
     }
@@ -98,6 +98,8 @@ class RouterPage extends AbstractPage implements SymfonyPage
         if (is_array($page) || $page instanceof Config) {
             if (isset($page['route']) && !isset($page['type'])) {
                 $page['type'] = "Bundle\ZendNavigationBundle\Page\RouterPage";
+            } else if (isset($page['uri']) && !isset($page['uri'])) {
+                $page['type'] = "Bundle\ZendNavigationBundle\Page\UriPage";
             }
             $page = AbstractPage::factory($page);
         }

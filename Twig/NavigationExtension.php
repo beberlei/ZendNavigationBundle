@@ -10,6 +10,8 @@ class NavigationExtension extends \Twig_Extension
 {
     protected $container;
 
+    protected $templating;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -17,7 +19,15 @@ class NavigationExtension extends \Twig_Extension
 
     public function getTemplating()
     {
-        return $this->container->get('templating');
+        if (!$this->templating) {
+            $this->templating = $this->container->get('templating');
+        }
+        return $this->templating;
+    }
+
+    public function setTemplating(\Symfony\Component\Templating\Engine $engine)
+    {
+        $this->templating = $engine;
     }
 
     public function getName()
