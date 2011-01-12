@@ -8,4 +8,8 @@
     {% if !loop.last || link_last %}
         </a>
     {% endif %}
+
+    {% if loop.last %}
+        {{separator}}
+    {% endif %}
 {% endfor; %}

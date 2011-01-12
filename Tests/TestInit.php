@@ -12,9 +12,14 @@ $loader->registerNamespaces(array(
     'Symfony'                        => $symfonyDir.'/src',
     'Zend'                           => $symfonyDir.'/vendor/zend/library',
 ));
+$loader->registerPrefixes(array(
+    'Twig'                           => $symfonyDir.'/vendor/twig/lib',
+));
 $loader->register();
 
 require_once __DIR__ . "/../Navigation.php";
-require_once __DIR__ . "/../Page/SymfonyPage.php";
+require_once __DIR__ . "/../Page/AbstractPage.php";
 require_once __DIR__ . "/../Page/RouterPage.php";
 require_once __DIR__ . "/../Page/UriPage.php";
+require_once __DIR__ . "/../Twig/NavigationExtension.php";
+require_once __DIR__ . "/../View/Sitemap.php";

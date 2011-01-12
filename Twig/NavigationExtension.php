@@ -5,12 +5,24 @@ namespace Bundle\ZendNavigationBundle\Twig;
 use Zend\Navigation\Container;
 use Zend\Navigation\AbstractPage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\Engine;
 
 class NavigationExtension extends \Twig_Extension
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
+    /**
+     * @var \Symfony\Bundle\FrameworkBundle\Templating\Engine
+     */
     protected $templating;
+
+    /**
+     * @var array
+     */
+    protected $navContainers = array();
 
     public function __construct(ContainerInterface $container)
     {
@@ -25,7 +37,10 @@ class NavigationExtension extends \Twig_Extension
         return $this->templating;
     }
 
-    public function setTemplating(\Symfony\Component\Templating\Engine $engine)
+    /**
+     * @param Engine $engine
+     */
+    public function setTemplating(Engine $engine)
     {
         $this->templating = $engine;
     }
@@ -39,7 +54,22 @@ class NavigationExtension extends \Twig_Extension
     {
         return array(
             'nav_breadcrumb' => new \Twig_Function_Method($this, 'renderBreadcrumb', array('is_safe' => array('html'))),
+            'nav_sitemap' => new \Twig_Function_Method($this, 'renderSitemap', array('is_safe' => array('html'))),
+            'nav_links' => new \Twig_Function_Method($this, 'renderLinks', array('is_safe' => array('html'))),
         );
+    }
+
+    public function renderLinks($containerName, $options)
+    {
+        $links = new \Bundle\ZendNavigationBundle\View\Links($options);
+        return $links->render($this->container->get('zend.navigation.'.$containerName));
+    }
+
+    public function renderSitemap($containerName, $options = array())
+    {
+        $sitemap = new \Bundle\ZendNavigationBundle\View\Sitemap($options);
+        $sitemap->setServerUrl($this->container->get('request')->getUri());
+        return $sitemap->render($this->container->get('zend.navigation.' . $containerName));
     }
 
     public function renderBreadcrumb($containerName, $options = array())
@@ -55,21 +85,28 @@ class NavigationExtension extends \Twig_Extension
         if (!isset($options['separator'])) {
             $options['separator'] = ' &gt; ';
         }
+        if (!isset($options['max_depth'])) {
+            $options['max_depth'] = null;
+        }
+        if (!isset($options['min_depth'])) {
+            $options['min_depth'] = 1;
+        }
 
         $navContainer = $this->container->get('zend.navigation.' . $containerName);
-        $activePage = $this->findActive($navContainer, 1, null);
+        $activePage = $this->findActive($navContainer, $options['min_depth'], $options['max_depth']);
         if (!$activePage) {
             return "";
         }
 
-        $pages = array($activePage['page']);
+        $activePage = $activePage['page'];
+        $pages = array($activePage);
         // walk back to root
         while ($parent = $activePage->getParent()) {
             if ($parent instanceof AbstractPage) {
                 $pages[] = $parent;
             }
 
-            if ($parent === $container) {
+            if ($parent === $navContainer) {
                 // at the root of the given container
                 break;
             }

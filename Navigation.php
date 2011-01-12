@@ -13,6 +13,14 @@ class Navigation extends Container
     protected $router;
     protected $request;
 
+    /**
+     * Create a navigation container from a YAML config file.
+     *
+     * @param RouterInterface $router
+     * @param Request $request
+     * @param string $configFile
+     * @return Navigation
+     */
     static public function factory(RouterInterface $router, Request $request, $configFile)
     {
         $pages = \Symfony\Component\Yaml\Yaml::load($configFile);
@@ -37,7 +45,7 @@ class Navigation extends Container
             $page = AbstractPage::factory($page);
         }
         parent::addPage($page);
-        if ($page instanceof SymfonyPage) {
+        if ($page instanceof AbstractPage) {
             $page->setRouter($this->router);
             $page->setRequest($this->request);
         }

@@ -2,10 +2,11 @@
 
 namespace Bundle\ZendNavigationBundle\Page;
 
-use Zend\Navigation\AbstractPage;
-
 class UriPage extends AbstractPage
 {
+    /**
+     * @var string
+     */
     protected $uri;
 
     public function setUri($uri)
@@ -21,5 +22,15 @@ class UriPage extends AbstractPage
     public function getHref()
     {
         return $this->uri;
+    }
+
+    public function toArray()
+    {
+        return array_merge(
+            parent::toArray(),
+            array(
+                'uri' => $this->uri,
+            )
+        );
     }
 }
