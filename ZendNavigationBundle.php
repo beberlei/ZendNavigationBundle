@@ -19,4 +19,14 @@ class ZendNavigationBundle extends Bundle
     {
         Loader::registerExtension(new ZendNavigationExtension());
     }
+
+    public function getNamespace()
+    {
+        return __NAMESPACE__;
+    }
+
+    public function getPath()
+    {
+        return strtr(__DIR__, '\\', '/');
+    }
 }
